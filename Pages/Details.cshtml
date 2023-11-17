@@ -1,0 +1,113 @@
+@page
+@model DetailsModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Review details for @Model.patientReferrals.refid</h2>
+
+<div class="row mb-5">
+    <form id="frmUpdate" method="post">
+        <dl class="row">
+        <dt class="col-md-2">CGU Number</dt>
+        <dd class="col-md-10">@Model.patientReferrals.CGU_No - @Model.patientReferrals.FIRSTNAME @Model.patientReferrals.LASTNAME</dd>
+        <dt class="col-md-2">Referral Date</dt>
+        <dd class="col-md-10">@Model.patientReferrals.RefDate.Value.ToString("dd/MM/yyyy")</dd>        
+        <dt class="col-md-2">Weeks From Referral</dt>
+        <dd class="col-md-10">@Model.patientReferrals.WeeksFromReferral</dd>
+        @*<dt class="col-md-2">Status</dt>
+        <dd class="col-md-10">@Model.patientReferrals.Status_Admin</dd>*@
+        <dt class="col-md-2">Pathway</dt>
+        <dd class="col-md-10">@Model.patientReferrals.PATHWAY</dd>
+        <dt class="col-md-2">Admin Status</dt>
+        <dd class="col-md-10">
+            <select id="ddlAdminStatus" name="sAdminStatus">
+                <option selected value=@Model.patientReferrals.Status_Admin>@Model.patientReferrals.Status_Admin</option>
+                @foreach(var item in Model.adminStatusList)
+                {
+                    <option value=@item.Status_Admin>@item.Status_Admin</option>
+                }
+            </select>
+        </dd>
+        <dt class="col-md-2">Referral Status</dt>
+        <dd class="col-md-10">
+            <select id="ddlComplete" name="sComplete">            
+                <option value=Active>Active</option>
+                <option value=Complete>Complete</option>            
+            </select>
+        </dd>
+        </dl>
+    </form>
+</div>
+
+<div class="row mb-5 g-5">
+    <div class="col-md-2">
+        <button type="button" id="btnComplete">Update</button>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-2">
+        <button type="button" id="btnBack">Back</button>
+    </div>
+</div>
+<div class="metadata" hidden="true">
+    <input name="ID" id="txtRefID" value=@Model.patientReferrals.refid />
+</div>
+
+<div class="row mb-5 g-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>AppType/DiaryAction</th>
+                <th>Attended/DocCode</th>
+                <th>DiaryText</th>
+                <th>Staff1</th>
+                <th>Staff2</th>
+                <th>Staff3</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model.activityItemsList)
+            {
+                <tr>
+                    <td>@item.Date</td>
+                    <td>@item.AppType_DiaryAction</td>
+                    <td>@item.Attended_DocCode</td>
+                    <td>@item.DiaryText</td>
+                    <td>@item.Staff1</td>
+                    <td>@item.Staff2</td>
+                    <td>@item.Staff3</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.getElementById("btnComplete").addEventListener("click", CloseReferral);
+    document.getElementById("btnBack").addEventListener("click", GoBack);
+    document.onload(LoadPage);
+
+    function CloseReferral()
+    {
+        if(document.getElementById("txtRefID").value.match(/};.*/))
+        {
+            window.alert("Oi! Stop trying to inject SQL code!");
+        }
+        else
+        {
+            document.getElementById("frmUpdate").submit();            
+        }
+    }
+
+    function GoBack()
+    {
+        window.history.back();
+    }
+
+    function LoadPage()
+    {
+        document.getElementById("ddlComplete").value = @Model.patientReferrals.COMPLETE;
+        document.getElementById("metadata").hidden = true;
+    }
+</script>

@@ -1,0 +1,276 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Review List";
+}
+
+
+<div class="container">
+    @if(Model.StaffUser != null)
+    {
+        <div class="row mb-5 g-5">
+            <h1>Hello, @Model.StaffUser.NAME</h1>
+        </div>
+        <form id="frmSelect">
+            <div class="row mb-5 g-5">            
+                <div class="col-md-1" style="text-align:right">
+                    <label>Admin Contact</label>
+                </div>
+                <div class="col-md-2">
+                    <select id="ddlSelect" name="sStaffCode">
+                        <option value="">Select...</option>
+                        @foreach(var item in Model.AdminList)
+                        {
+                            <option value=@item.STAFF_CODE>@item.NAME</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-1" style="text-align:right">
+                    <label>Admin Status</label>
+                </div>
+                <div class="col-md-2">
+                    <select id="ddlAdminStatus" name="sAdminStatus">
+                        <option value="">Select...</option>
+                        @foreach(var item in Model.AdminStatusList)
+                        {
+                            <option value=@item.Status_Admin>@item.Status_Admin</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-1"  style="text-align:right">
+                    <label>Weeks</label>
+                </div>
+                <div class="col-md-1">
+                    <input name="iWeeks" style="width:40px" />
+                </div>
+                <div class="col-md-1" style="text-align:right">
+                    <label>Pathway</label>
+                </div>
+                <div class="col-md-1">
+                    <select id="ddlPathway" name="sPathway">
+                        <option value="">Select...</option>
+                        @foreach(var item in Model.PathwayList)
+                        {
+                            <option value=@item.CGU_Pathway>@item.CGU_Pathway</option>
+                        }
+                    </select>
+                </div>        
+                <div class="col-md-1"></div>   
+                <div class="col-md-1">
+                    <button id="btnSubmit">Select</button>
+                </div>                
+            </div>
+             @*This is only used to measure the col-md divs in Bootstrap
+            <div class="row">
+                <div class="col-md-1">1</div>
+                <div class="col-md-1">2</div>
+                <div class="col-md-1">3</div>
+                <div class="col-md-1">4</div>
+                <div class="col-md-1">5</div>
+                <div class="col-md-1">6</div>
+                <div class="col-md-1">7</div>
+                <div class="col-md-1">8</div>
+                <div class="col-md-1">9</div>
+                <div class="col-md-1">10</div>
+                <div class="col-md-1">11</div>
+                <div class="col-md-1">12</div>
+            </div>*@
+        </form>
+    
+        @if (Model.StaffUser.POSITION == "Admin Team Leader")
+        {
+            <div class="container" style="border:solid">
+                <div class="row mb-2 g-2">
+                    <h2>Area Staff Cover for Cancer</h2>
+                </div>
+                <form id="frmUpdate" method="Post">
+                    <div class="row mb-2 g-2">
+                        <div class="col-md-2" style="text-align:right">
+                            <label>Area name:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="ddlAreaName" name="iAreaID" onchange="ShowStaff()">
+                                <option value="">Select...</option>
+                                @foreach (var item in Model.AreaNamesList)
+                                {
+                                    <option value=@item.AreaID>@item.AreaCode - @item.AreaName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2" style="text-align:right">
+                            <label>Admin</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="ddlnewAdmin" name="sAdmin">
+                                <option value="">Select...</option>
+                                @foreach (var item in Model.AdminList)
+                                {
+                                    <option value=@item.STAFF_CODE>@item.NAME</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="btnUpdate" disabled="true">Update</button>
+                        </div>
+                    </div>
+                    <div class="row mb-2 g-2">
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2" style="text-align:right">
+                            <label>GC</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="ddlnewGC" name = "sGC">
+                                <option value="">Select...</option>
+                                @foreach (var item in Model.GCList)
+                                {
+                                    <option value=@item.STAFF_CODE>@item.NAME</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="btnUpdateAll" disabled="true">Update All </button>
+                        </div>
+                    </div>                
+                    <div class="row mb-2 g-2">
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2" style="text-align:right">
+                            <label>Consultant</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="ddlnewCons" name = "sConsultant">
+                                <option value="">Select...</option>
+                                @foreach (var item in Model.ConsList)
+                                {
+                                    <option value=@item.STAFF_CODE>@item.NAME</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="txtAreaCode" name="sAreaCode" hidden="true" />
+                        </div>
+                    </div>                
+                </form>
+            </div>
+        }
+        @if(Model.StaffMemberName != null)
+        {
+            <div class="row mb-5 g-5">
+                <h2>Review list for @Model.StaffMemberName</h2>
+            </div>
+        }
+    }
+
+
+    <div class="row mb-5 g-5">
+        
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>CGU_No</th>
+                    <th>Weeks From Ref</th>
+                    <th>Admin Status</th>
+                    <th>Clock Start Date</th>
+                    <th>Clock Stop Date</th>
+                    <th>Breach Date</th>
+                    <th>Pathway</th>
+                    <th>Clics?</th>
+                    <th>Type</th>
+                    <th>Admin Contact</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var item in Model.PatientReferralsList)
+                {
+                    <tr>
+                        <td><a asp-area="" asp-page="/Details" asp-route-ID=@item.refid >Details</a></td>
+                        <td>@item.CGU_No</td>
+                        <td>@item.WeeksFromReferral</td>
+                        <td>@item.Status_Admin</td>
+                        @if (item.ClockStartDate.HasValue)
+                        {
+                            <td>@item.ClockStartDate.Value.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (item.ClockStopDate.HasValue)
+                        {
+                            <td>@item.ClockStopDate.Value.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (item.BreachDate.HasValue)
+                        {
+                            <td>@item.BreachDate.Value.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td>@item.PATHWAY</td>
+                        <td>@item.Clics</td>
+                        <td>@item.RefType</td>
+                        <td>@item.Admin_Contact</td>
+                        <td>@item.COMPLETE</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.getElementById("btnUpdate").addEventListener("click", UpdateArea);
+    document.getElementById("btnUpdateAll").addEventListener("click", UpdateAllAreas);
+    //document.getElementById("ddlAreaName").addEventListener("change", ShowStaff);
+    //document.onload(LoadForm());
+
+    function UpdateArea() 
+    { 
+        document.getElementById("frmUpdate").submit();
+    }
+
+    function UpdateAllAreas() 
+    { 
+        var i = document.getElementById("ddlAreaName").value;
+        var AreaCodeArray = [];
+        @foreach (var item in Model.AreaNamesList)
+        {
+            @:AreaCodeArray.push("@item.AreaCode");
+        }
+
+        document.getElementById("txtAreaCode").value = AreaCodeArray[i-1];
+        document.getElementById("frmUpdate").submit();
+    }
+
+    function ShowStaff() 
+    {        
+        var ConsArray = [];
+        var GCArray = [];
+        var AdminArray = [];
+        var AreaCodeArray = [];
+        var i = document.getElementById("ddlAreaName").value;
+
+        @foreach (var item in Model.AreaNamesList)
+        {
+            @:ConsArray.push("@item.ConsCode");
+            @:GCArray.push("@item.GC");
+            @:AdminArray.push("@item.FHCStaffCode");
+            @:AreaCodeArray.push("@item.AreaCode");
+        }
+
+        document.getElementById("ddlnewCons").value = ConsArray[i-1];
+        document.getElementById("ddlnewGC").value = GCArray[i-1];
+        document.getElementById("ddlnewAdmin").value = AdminArray[i-1];
+        document.getElementById("btnUpdate").disabled = false;
+        document.getElementById("btnUpdateAll").disabled = false;
+        document.getElementById("btnUpdateAll").innerHTML = "Update all " + AreaCodeArray[i-1];
+    }
+
+    
+</script>
