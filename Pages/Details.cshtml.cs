@@ -28,30 +28,44 @@ namespace WMFACS_Review_List.Pages
         [Authorize]
         public void OnGet(int ID)
         {
-            patientReferrals = _context.PatientReferrals.FirstOrDefault(r => r.refid == ID);
-            adminStatusList = _context.AdminStatuses.ToList();
-            activityItemsList = _context.ActivityItems.Where(a => a.RefID == ID).OrderBy(a => a.Date).ToList();
+            try
+            {
+                patientReferrals = _context.PatientReferrals.FirstOrDefault(r => r.refid == ID);
+                adminStatusList = _context.AdminStatuses.ToList();
+                activityItemsList = _context.ActivityItems.Where(a => a.RefID == ID).OrderBy(a => a.Date).ToList();
+            }
+            catch(Exception ex)
+            {
+                Response.Redirect("Error?sError=" + ex.Message);
+            }
         }
 
         [Authorize]
         public void OnPost(int ID, string sComplete, string sAdminStatus)
         {
-            patientReferrals = _context.PatientReferrals.FirstOrDefault(r => r.refid == ID);
-            adminStatusList = _context.AdminStatuses.ToList();
-            activityItemsList = _context.ActivityItems.Where(a => a.RefID == ID).OrderBy(a => a.Date).ToList();
+            try
+            {
+                patientReferrals = _context.PatientReferrals.FirstOrDefault(r => r.refid == ID);
+                adminStatusList = _context.AdminStatuses.ToList();
+                activityItemsList = _context.ActivityItems.Where(a => a.RefID == ID).OrderBy(a => a.Date).ToList();
 
 
-            StaffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == User.Identity.Name);
-            string sStaffCode = StaffUser.STAFF_CODE;
+                StaffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == User.Identity.Name);
+                string sStaffCode = StaffUser.STAFF_CODE;
 
-            //SqlConnection conn = new SqlConnection("Server=spinners;DataBase=Clinical_Dev;User Id=shire_user;Password=shire1;TrustServerCertificate=True");
-            SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ConString"));
-            conn.Open();
-            SqlCommand cmd = new SqlCommand("Update MasterActivityTable set COMPLETE='" + sComplete + "', Status_Admin='" + sAdminStatus + 
-            "', updateddate = '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', updatedby='" + sStaffCode + "' where RefID=" + ID, conn);
-            cmd.ExecuteNonQuery();
+                //SqlConnection conn = new SqlConnection("Server=spinners;DataBase=Clinical_Dev;User Id=shire_user;Password=shire1;TrustServerCertificate=True");
+                SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ConString"));
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("Update MasterActivityTable set COMPLETE='" + sComplete + "', Status_Admin='" + sAdminStatus +
+                "', updateddate = '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', updatedby='" + sStaffCode + "' where RefID=" + ID, conn);
+                cmd.ExecuteNonQuery();
 
-            Response.Redirect("Index");
+                Response.Redirect("Index");
+            }
+            catch (Exception ex)
+            {
+                Response.Redirect("Error?sError=" + ex.Message);
+            }
         }
                 
     }

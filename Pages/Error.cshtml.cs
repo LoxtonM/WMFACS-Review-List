@@ -9,6 +9,7 @@ namespace WMFACS_Review_List.Pages
     public class ErrorModel : PageModel
     {
         public string? RequestId { get; set; }
+        public string strError { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
@@ -19,9 +20,10 @@ namespace WMFACS_Review_List.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public void OnGet(string sError)
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            strError = sError;
         }
     }
 }
