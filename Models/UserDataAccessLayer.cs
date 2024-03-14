@@ -12,7 +12,7 @@ namespace WMFACS_Review_List.Models
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
+                .AddJsonFile("secrets.json");
 
             Configuration = builder.Build();
             string connectionString = Configuration["ConnectionStrings:ConString"];
