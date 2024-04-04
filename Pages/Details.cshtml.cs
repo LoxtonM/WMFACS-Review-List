@@ -41,7 +41,7 @@ namespace WMFACS_Review_List.Pages
         }
 
         [Authorize]
-        public void OnPost(int ID, string sComplete, string sAdminStatus)
+        public void OnPost(int ID, string sComplete, string adminStatus)
         {
             try
             {
@@ -51,13 +51,13 @@ namespace WMFACS_Review_List.Pages
 
 
                 StaffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == User.Identity.Name);
-                string sStaffCode = StaffUser.STAFF_CODE;
+                string staffCode = StaffUser.STAFF_CODE;
 
                 //SqlConnection conn = new SqlConnection("Server=spinners;DataBase=Clinical_Dev;User Id=shire_user;Password=shire1;TrustServerCertificate=True");
                 SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ConString"));
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("Update MasterActivityTable set COMPLETE='" + sComplete + "', Status_Admin='" + sAdminStatus +
-                "', updateddate = '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', updatedby='" + sStaffCode + "' where RefID=" + ID, conn);
+                SqlCommand cmd = new SqlCommand("Update MasterActivityTable set COMPLETE='" + sComplete + "', Status_Admin='" + adminStatus +
+                "', updateddate = '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', updatedby='" + staffCode + "' where RefID=" + ID, conn);
                 cmd.ExecuteNonQuery();
 
                 Response.Redirect("Index");

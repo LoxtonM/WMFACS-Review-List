@@ -17,7 +17,7 @@
                     <label>Admin Contact</label>
                 </div>
                 <div class="col-md-2">
-                    <select id="ddlSelect" name="sStaffCode">
+                    <select id="ddlSelect" name="staffCode">
                         <option value="">Select...</option>
                         @foreach(var item in Model.AdminList)
                         {
@@ -29,7 +29,7 @@
                     <label>Admin Status</label>
                 </div>
                 <div class="col-md-2">
-                    <select id="ddlAdminStatus" name="sAdminStatus">
+                    <select id="ddlAdminStatus" name="adminStatus">
                         <option value="">Select...</option>
                         @foreach(var item in Model.AdminStatusList)
                         {
@@ -41,13 +41,13 @@
                     <label>Weeks</label>
                 </div>
                 <div class="col-md-1">
-                    <input name="iWeeks" style="width:40px" />
+                    <input name="weeks" style="width:40px" />
                 </div>
                 <div class="col-md-1" style="text-align:right">
                     <label>Pathway</label>
                 </div>
                 <div class="col-md-1">
-                    <select id="ddlPathway" name="sPathway">
+                    <select id="ddlPathway" name="pathway">
                         <option value="">Select...</option>
                         @foreach(var item in Model.PathwayList)
                         {
@@ -89,7 +89,7 @@
                             <label>Area name:</label>
                         </div>
                         <div class="col-md-3">
-                            <select id="ddlAreaName" name="iAreaID" onchange="ShowStaff()">
+                            <select id="ddlAreaName" name="areaID" onchange="ShowStaff()">
                                 <option value="">Select...</option>
                                 @foreach (var item in Model.AreaNamesList)
                                 {
@@ -101,7 +101,7 @@
                             <label>Admin</label>
                         </div>
                         <div class="col-md-3">
-                            <select id="ddlnewAdmin" name="sAdmin">
+                            <select id="ddlnewAdmin" name="admin">
                                 <option value="">Select...</option>
                                 @foreach (var item in Model.AdminList)
                                 {
@@ -119,7 +119,7 @@
                             <label>GC</label>
                         </div>
                         <div class="col-md-3">
-                            <select id="ddlnewGC" name = "sGC">
+                            <select id="ddlnewGC" name = "gc">
                                 <option value="">Select...</option>
                                 @foreach (var item in Model.GCList)
                                 {
@@ -137,7 +137,7 @@
                             <label>Consultant</label>
                         </div>
                         <div class="col-md-3">
-                            <select id="ddlnewCons" name = "sConsultant">
+                            <select id="ddlnewCons" name = "consultant">
                                 <option value="">Select...</option>
                                 @foreach (var item in Model.ConsList)
                                 {
@@ -146,7 +146,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <input id="txtAreaCode" name="sAreaCode" hidden="true" />
+                            <input id="txtAreaCode" name="areaCode" hidden="true" />
                         </div>
                     </div>                
                 </form>

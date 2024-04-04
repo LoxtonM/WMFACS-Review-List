@@ -21,7 +21,7 @@
         <dd class="col-md-10">@Model.patientReferrals.PATHWAY</dd>
         <dt class="col-md-2">Admin Status</dt>
         <dd class="col-md-10">
-            <select id="ddlAdminStatus" name="sAdminStatus">
+            <select id="ddlAdminStatus" name="adminStatus">
                 <option selected value=@Model.patientReferrals.Status_Admin>@Model.patientReferrals.Status_Admin</option>
                 @foreach(var item in Model.adminStatusList)
                 {

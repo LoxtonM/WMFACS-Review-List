@@ -4,18 +4,24 @@ using WMFACS_Review_List.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Data.SqlClient;
+using WMFACS_Review_List.Metadata;
+using System.Xml;
 
 namespace WMFACS_Review_List.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly DataContext _context;
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
+        private readonly DataServices _ds;
+        private readonly SqlServices _sql;
 
         public IndexModel(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+            _ds = new DataServices(_context);
+            _sql = new SqlServices(configuration);
         }
 
         public IEnumerable<StaffMembers?> AdminList { get; set; }
@@ -32,7 +38,7 @@ namespace WMFACS_Review_List.Pages
         
 
         [Authorize]
-        public void OnGet(string? sStaffCode, string? sAdminStatus, string? sPathway, int? iWeeks)
+        public void OnGet(string? staffCode, string? adminStatus, string? pathway, int? weeks)
         {
             try
             {
@@ -42,51 +48,51 @@ namespace WMFACS_Review_List.Pages
                 }
                 else
                 {
-                    StaffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == User.Identity.Name);
-                    if (sStaffCode is null && StaffUser.POSITION != "Admin Team Leader")
+                    StaffUser = _ds.GetStaffMemberDetails(User.Identity.Name);
+                    if (staffCode is null && StaffUser.POSITION != "Admin Team Leader")
                     {
-                        sStaffCode = StaffUser.STAFF_CODE;
+                        staffCode = StaffUser.STAFF_CODE;
                     }
                 }
 
-                AdminList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == "Admin").OrderBy(s => s.NAME).ToList();
-                GCList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == "GC" && s.InPost == true).OrderBy(s => s.NAME).ToList();
-                ConsList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == "Consultant" && s.InPost == true).OrderBy(s => s.NAME).ToList();
+                AdminList = _ds.GetStaffMemberListByRole("Admin");
+                GCList = _ds.GetStaffMemberListByRole("GC");
+                ConsList = _ds.GetStaffMemberListByRole("Consultant");
 
-                AreaNamesList = _context.AreaNames.Where(a => a.InUse == true).OrderBy(a => a.AreaID);
-                AdminStatusList = _context.AdminStatuses.ToList();
-                PathwayList = _context.Pathways.ToList();
-                PatientReferralsList = _context.PatientReferrals.Where(r => r.RefType.Contains("Refer") && r.COMPLETE != "Complete" && r.logicaldelete == false && r.Admin_Contact != null).ToList().OrderBy(r => r.WeeksFromReferral);
+                AreaNamesList = _ds.GetAreaNamesList();
+                AdminStatusList = _ds.GetAdminStatusList();
+                PathwayList = _ds.GetPathwayList();
+                PatientReferralsList = _ds.GetPatientReferralsList();
 
-                int iDays;
+                int days;
 
-                if (iWeeks != null)
+                if (weeks != null)
                 {
-                    iDays = iWeeks.GetValueOrDefault() * 7;
+                    days = weeks.GetValueOrDefault() * 7;
                 }
                 else
                 {
-                    iDays = 56;
+                    days = 56;
                 }
 
-                DateTime FromDate = DateTime.Now.AddDays(-iDays);
+                DateTime FromDate = DateTime.Now.AddDays(-days);
 
                 PatientReferralsList = PatientReferralsList.Where(r => r.RefDate >= FromDate);
 
-                if (sStaffCode != null)
+                if (staffCode != null)
                 {
-                    PatientReferralsList = PatientReferralsList.Where(r => r.Admin_Contact == sStaffCode);
-                    StaffMemberName = _context.StaffMembers.FirstOrDefault(s => s.STAFF_CODE == sStaffCode).NAME;
+                    PatientReferralsList = PatientReferralsList.Where(r => r.Admin_Contact == staffCode);
+                    StaffMemberName = _context.StaffMembers.FirstOrDefault(s => s.STAFF_CODE == staffCode).NAME;
                 }
 
-                if (sAdminStatus != null)
+                if (adminStatus != null)
                 {
-                    PatientReferralsList = PatientReferralsList.Where(r => r.Status_Admin == sAdminStatus);
+                    PatientReferralsList = PatientReferralsList.Where(r => r.Status_Admin == adminStatus);
                 }
 
-                if (sPathway != null)
+                if (pathway != null)
                 {
-                    PatientReferralsList = PatientReferralsList.Where(r => r.PATHWAY == sPathway);
+                    PatientReferralsList = PatientReferralsList.Where(r => r.PATHWAY == pathway);
                 }
             }
             catch (Exception ex)
@@ -95,7 +101,7 @@ namespace WMFACS_Review_List.Pages
             }
         }
 
-        public void OnPost(int? iAreaID, string? sAdmin, string? sGC, string? sConsultant, string? sAreaCode)
+        public void OnPost(int? areaID, string? admin, string? gc, string? consultant, string? areaCode)
         {
             try
             {
@@ -107,33 +113,18 @@ namespace WMFACS_Review_List.Pages
                 {
                     StaffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == User.Identity.Name);
                 }
+                
+                _sql.UpdateAreaNames(areaID.GetValueOrDefault(), admin, gc, consultant, StaffUser.STAFF_CODE, areaCode);
 
-                //SqlConnection conn = new SqlConnection("Server=spinners;DataBase=Clinical_Dev;User Id=shire_user;Password=shire1;TrustServerCertificate=True");
-                SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ConString"));
-                conn.Open();
 
-                SqlCommand cmd = new SqlCommand("", conn);
+                AdminList = _ds.GetStaffMemberListByRole("Admin");
+                GCList = _ds.GetStaffMemberListByRole("GC");
+                ConsList = _ds.GetStaffMemberListByRole("Consultant");
 
-                if (sAreaCode != null)
-                {
-                    cmd.CommandText = "Update ListAreaNames set FHCStaffCode='" + sAdmin + "', GC='" + sGC + "', ConsCode='" + sConsultant + "', WhoLastEdit='" + StaffUser.STAFF_CODE +
-                "', DateLastEdit='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "' where AreaCode='" + sAreaCode + "'";
-                }
-                else
-                {
-                    cmd.CommandText = "Update ListAreaNames set FHCStaffCode='" + sAdmin + "', GC='" + sGC + "', ConsCode='" + sConsultant + "', WhoLastEdit='" + StaffUser.STAFF_CODE +
-                    "', DateLastEdit='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "' where AreaID=" + iAreaID;
-                }
-                cmd.ExecuteNonQuery();
-
-                AdminList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == "Admin").OrderBy(s => s.NAME).ToList();
-                GCList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == "GC" && s.InPost == true).OrderBy(s => s.NAME).ToList();
-                ConsList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == "Consultant" && s.InPost == true).OrderBy(s => s.NAME).ToList();
-
-                AreaNamesList = _context.AreaNames.Where(a => a.InUse == true).OrderBy(a => a.AreaID);
-                AdminStatusList = _context.AdminStatuses.ToList();
-                PathwayList = _context.Pathways.ToList();
-                PatientReferralsList = _context.PatientReferrals.Where(r => r.RefType.Contains("Refer") && r.COMPLETE != "Complete" && r.logicaldelete == false && r.Admin_Contact != null).ToList().OrderBy(r => r.WeeksFromReferral);
+                AreaNamesList = _ds.GetAreaNamesList();
+                AdminStatusList = _ds.GetAdminStatusList();
+                PathwayList = _ds.GetPathwayList();
+                PatientReferralsList = _ds.GetPatientReferralsList();
 
                 DateTime FromDate = DateTime.Now.AddDays(-56);
 
