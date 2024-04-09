@@ -67,10 +67,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in Model.activityItemsList)
+            @foreach(var item in 
+            
+            
+            Model.activityItemsList)
             {
                 <tr>
-                    <td>@item.Date</td>
+                    <td>@item.Date.ToString("dd/MM/yyyy")</td>
                     <td>@item.AppType_DiaryAction</td>
                     <td>@item.Attended_DocCode</td>
                     <td>@item.DiaryText</td>

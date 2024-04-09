@@ -77,7 +77,7 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         public string CGU_No { get; set; }
         public DateTime Date { get; set; }
         public string AppType_DiaryAction { get; set; }
-        public string Attended_DocCode { get; set; }
+        public string? Attended_DocCode { get; set; }
         public string DiaryText { get; set; }
         public string Staff1 { get; set; }
         public string Staff2 { get; set; }
