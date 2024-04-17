@@ -63,7 +63,21 @@ namespace WMFACS_Review_List.Metadata
 
             return patientReferralsList;
         }
-            
+
+        public List<ActivityItems> GetActivityItemsList(int id) 
+        {
+            var activityItemsList = _context.ActivityItems.Where(a => a.RefID == id).OrderBy(a => a.Date).ToList();
+
+            return activityItemsList;
+        }
+
+        public PatientReferrals GetReferralDetails(int refID)
+        {
+            var referral = _context.PatientReferrals.FirstOrDefault(r => r.refid == refID);
+
+            return referral;
+        }
+
 
     }
 }

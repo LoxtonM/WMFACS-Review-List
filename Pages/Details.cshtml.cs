@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WMFACS_Review_List.Data;
+using WMFACS_Review_List.Metadata;
 using WMFACS_Review_List.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -12,12 +13,15 @@ namespace WMFACS_Review_List.Pages
     {
         private readonly DataContext _context;
         private IConfiguration _configuration;
+        private readonly DataServices _data;
+        private readonly SqlServices _sql;
         
-
         public DetailsModel(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+            _data = new DataServices(_context);
+            _sql = new SqlServices(_configuration);
         }
         public PatientReferrals patientReferrals { get; set; }
         public IEnumerable<AdminStatuses> adminStatusList { get; set; }
@@ -26,13 +30,14 @@ namespace WMFACS_Review_List.Pages
         
 
         [Authorize]
-        public void OnGet(int ID)
+        public void OnGet(int id)
         {
             try
-            {
-                patientReferrals = _context.PatientReferrals.FirstOrDefault(r => r.refid == ID);
-                adminStatusList = _context.AdminStatuses.ToList();
-                activityItemsList = _context.ActivityItems.Where(a => a.RefID == ID).OrderBy(a => a.Date).ToList();
+            {                
+                patientReferrals = _data.GetReferralDetails(id);
+                adminStatusList = _data.GetAdminStatusList();
+                activityItemsList = _data.GetActivityItemsList(id);
+
             }
             catch(Exception ex)
             {
@@ -41,24 +46,17 @@ namespace WMFACS_Review_List.Pages
         }
 
         [Authorize]
-        public void OnPost(int ID, string sComplete, string adminStatus)
+        public void OnPost(int id, string complete, string adminStatus)
         {
             try
             {
-                patientReferrals = _context.PatientReferrals.FirstOrDefault(r => r.refid == ID);
-                adminStatusList = _context.AdminStatuses.ToList();
-                activityItemsList = _context.ActivityItems.Where(a => a.RefID == ID).OrderBy(a => a.Date).ToList();
+                patientReferrals = _data.GetReferralDetails(id);
+                adminStatusList = _data.GetAdminStatusList();
+                activityItemsList = _data.GetActivityItemsList(id);
 
+                string staffCode = _data.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
 
-                StaffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == User.Identity.Name);
-                string staffCode = StaffUser.STAFF_CODE;
-
-                //SqlConnection conn = new SqlConnection("Server=spinners;DataBase=Clinical_Dev;User Id=shire_user;Password=shire1;TrustServerCertificate=True");
-                SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ConString"));
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("Update MasterActivityTable set COMPLETE='" + sComplete + "', Status_Admin='" + adminStatus +
-                "', updateddate = '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', updatedby='" + staffCode + "' where RefID=" + ID, conn);
-                cmd.ExecuteNonQuery();
+                _sql.UpdateReferralStatus(complete, adminStatus, staffCode, id);
 
                 Response.Redirect("Index");
             }

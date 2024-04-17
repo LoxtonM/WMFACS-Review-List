@@ -14,10 +14,10 @@
         <form id="frmSelect">
             <div class="row mb-5 g-5">            
                 <div class="col-md-1" style="text-align:right">
-                    <label>Admin Contact</label>
+                    <label class="w-100">Admin Contact</label>
                 </div>
                 <div class="col-md-2">
-                    <select id="ddlSelect" name="staffCode">
+                    <select class="w-100" id="ddlSelect" name="staffCode">
                         <option value="">Select...</option>
                         @foreach(var item in Model.AdminList)
                         {
@@ -26,10 +26,10 @@
                     </select>
                 </div>
                 <div class="col-md-1" style="text-align:right">
-                    <label>Admin Status</label>
+                    <label class="w-100">Admin Status</label>
                 </div>
                 <div class="col-md-2">
-                    <select id="ddlAdminStatus" name="adminStatus">
+                    <select class="w-100" id="ddlAdminStatus" name="adminStatus">
                         <option value="">Select...</option>
                         @foreach(var item in Model.AdminStatusList)
                         {
@@ -38,16 +38,16 @@
                     </select>
                 </div>
                 <div class="col-md-1"  style="text-align:right">
-                    <label>Weeks</label>
+                    <label class="w-100">Weeks</label>
                 </div>
                 <div class="col-md-1">
-                    <input name="weeks" style="width:40px" />
+                    <input class="w-100" name="weeks" style="width:40px" />
                 </div>
                 <div class="col-md-1" style="text-align:right">
-                    <label>Pathway</label>
+                    <label class="w-100">Pathway</label>
                 </div>
                 <div class="col-md-1">
-                    <select id="ddlPathway" name="pathway">
+                    <select class="w-100" id="ddlPathway" name="pathway">
                         <option value="">Select...</option>
                         @foreach(var item in Model.PathwayList)
                         {
@@ -186,7 +186,7 @@
                     <tr>
                         <td><a asp-area="" asp-page="/Details" asp-route-ID=@item.refid >Details</a></td>
                         <td>@item.CGU_No</td>
-                        <td>@item.WeeksFromReferral</td>
+                        <td class="text-center">@item.WeeksFromReferral</td>
                         <td>@item.Status_Admin</td>
                         @if (item.ClockStartDate.HasValue)
                         {

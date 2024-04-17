@@ -2,6 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using System.Reflection.Metadata;
 using System;
+using Microsoft.VisualBasic;
+using static System.Net.Mime.MediaTypeNames;
+using System.Data;
+using WMFACS_Review_List.Models;
+using System.Xml;
 
 namespace WMFACS_Review_List.Metadata
 {
@@ -37,7 +42,33 @@ namespace WMFACS_Review_List.Metadata
             _cmd.CommandText = cmdText;
             _con.Open();
             _cmd.ExecuteNonQuery();
-            _con.Close();            
+            _con.Close();
+
+            CreateAudit(staffCode, "WMFACSUpdateAreas", areaID);
+        }
+
+        public void UpdateReferralStatus(string complete, string adminStatus, string staffCode, int id)
+        {
+            string cmdText = $"Update MasterActivityTable set COMPLETE='{complete}', Status_Admin='{adminStatus}', " +
+                $"updateddate = '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}', updatedby='{staffCode}' where RefID={id}";
+            
+            _cmd.CommandText = cmdText;
+            _con.Open();
+            _cmd.ExecuteNonQuery();
+            _con.Close();
+
+            CreateAudit(staffCode, "WMFACSUpdateReferralStatus", id);
+        }
+        public void CreateAudit(string staffCode, string formName, int recordPrimaryKey)
+        {
+            _con.Open();
+            SqlCommand cmd = new SqlCommand("dbo.sp_CreateAudit", _con);            
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@staffCode", SqlDbType.VarChar).Value = staffCode;
+            cmd.Parameters.Add("@form", SqlDbType.VarChar).Value = formName;
+            cmd.Parameters.Add("@recordkey", SqlDbType.Int).Value = recordPrimaryKey;            
+            cmd.ExecuteNonQuery();
+            _con.Close();
         }
 
 
