@@ -34,7 +34,7 @@ namespace WMFACS_Review_List.Pages
         public IEnumerable<Pathways?> PathwayList { get; set; }
 
         public string? StaffMemberName { get; set; }
-       
+        public bool isLive;
         
 
         [Authorize]
@@ -94,6 +94,7 @@ namespace WMFACS_Review_List.Pages
                 {
                     PatientReferralsList = PatientReferralsList.Where(r => r.PATHWAY == pathway);
                 }
+                isLive = bool.Parse(_configuration.GetValue("IsLive", ""));
             }
             catch (Exception ex)
             {
