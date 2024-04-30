@@ -2,10 +2,7 @@
 using WMFACS_Review_List.Data;
 using WMFACS_Review_List.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Data.SqlClient;
 using WMFACS_Review_List.Metadata;
-using System.Xml;
 
 namespace WMFACS_Review_List.Pages
 {
@@ -35,7 +32,12 @@ namespace WMFACS_Review_List.Pages
 
         public string? StaffMemberName { get; set; }
         public bool isLive;
-        
+
+        public string? staffCodeSelected;
+        public string? adminStatusSelected;
+        public string? pathwaySelected;
+        public int? weeksSelected;
+
 
         [Authorize]
         public void OnGet(string? staffCode, string? adminStatus, string? pathway, int? weeks)
@@ -69,10 +71,12 @@ namespace WMFACS_Review_List.Pages
                 if (weeks != null)
                 {
                     days = weeks.GetValueOrDefault() * 7;
+                    weeksSelected = weeks.GetValueOrDefault();
                 }
                 else
                 {
                     days = 56;
+                    weeksSelected = 8;
                 }
 
                 DateTime FromDate = DateTime.Now.AddDays(-days);
@@ -83,16 +87,19 @@ namespace WMFACS_Review_List.Pages
                 {
                     PatientReferralsList = PatientReferralsList.Where(r => r.Admin_Contact == staffCode);
                     StaffMemberName = _context.StaffMembers.FirstOrDefault(s => s.STAFF_CODE == staffCode).NAME;
+                    staffCodeSelected = staffCode;
                 }
 
                 if (adminStatus != null)
                 {
                     PatientReferralsList = PatientReferralsList.Where(r => r.Status_Admin == adminStatus);
+                    adminStatusSelected = adminStatus;
                 }
 
                 if (pathway != null)
                 {
                     PatientReferralsList = PatientReferralsList.Where(r => r.PATHWAY == pathway);
+                    pathwaySelected = pathway;
                 }
                 isLive = bool.Parse(_configuration.GetValue("IsLive", ""));
             }

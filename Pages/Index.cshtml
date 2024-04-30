@@ -23,7 +23,7 @@
                     <label class="w-100">Admin Contact</label>
                 </div>
                 <div class="col-md-2">
-                    <select class="w-100" id="ddlSelect" name="staffCode">
+                    <select class="w-100" id="ddlSelect" name="staffCode" asp-for=@Model.staffCodeSelected>
                         <option value="">Select...</option>
                         @foreach(var item in Model.AdminList)
                         {
@@ -35,7 +35,7 @@
                     <label class="w-100">Admin Status</label>
                 </div>
                 <div class="col-md-2">
-                    <select class="w-100" id="ddlAdminStatus" name="adminStatus">
+                    <select class="w-100" id="ddlAdminStatus" name="adminStatus" asp-for=@Model.adminStatusSelected>
                         <option value="">Select...</option>
                         @foreach(var item in Model.AdminStatusList)
                         {
@@ -47,13 +47,13 @@
                     <label class="w-100">Weeks</label>
                 </div>
                 <div class="col-md-1">
-                    <input class="w-100" name="weeks" style="width:40px" />
+                    <input class="w-100" name="weeks" style="width:40px" asp-for=@Model.weeksSelected />
                 </div>
                 <div class="col-md-1" style="text-align:right">
                     <label class="w-100">Pathway</label>
                 </div>
                 <div class="col-md-1">
-                    <select class="w-100" id="ddlPathway" name="pathway">
+                    <select class="w-100" id="ddlPathway" name="pathway" asp-for=@Model.pathwaySelected>
                         <option value="">Select...</option>
                         @foreach(var item in Model.PathwayList)
                         {
