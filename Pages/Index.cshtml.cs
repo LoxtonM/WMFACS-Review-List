@@ -81,7 +81,7 @@ namespace WMFACS_Review_List.Pages
 
                 DateTime FromDate = DateTime.Now.AddDays(-days);
 
-                PatientReferralsList = PatientReferralsList.Where(r => r.RefDate >= FromDate);
+                PatientReferralsList = PatientReferralsList.Where(r => r.RefDate <= FromDate);
 
                 if (staffCode != null)
                 {

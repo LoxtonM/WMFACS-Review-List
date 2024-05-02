@@ -53,6 +53,7 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         public int refid { get; set; }
         public string? CGU_No { get; set; }
         public int? WeeksFromReferral { get; set; }
+        public int? DaysFromReferral { get; set; }
         public string? Status_Admin { get; set; }
         public DateTime? ClockStartDate { get; set; }
         public DateTime? ClockStopDate { get; set; }
