@@ -67,6 +67,7 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         public bool logicaldelete { get; set; }
         public string? FIRSTNAME { get; set; }
         public string? LASTNAME { get; set; }
+        public string? GC { get; set; }
     }
 
     [Table("vw_Appts_Diary_for_Review", Schema="dbo")]
