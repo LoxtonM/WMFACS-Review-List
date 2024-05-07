@@ -10,14 +10,19 @@ namespace WMFACS_Review_List.Pages
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        private readonly DataServices _ds;
+        private readonly StaffData _staffData;
+        private readonly StaticData _staticData;
+        private readonly ReferralData _referralData;
         private readonly SqlServices _sql;
+
 
         public IndexModel(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
-            _ds = new DataServices(_context);
+            _staffData = new StaffData(_context);
+            _staticData = new StaticData(_context);
+            _referralData = new ReferralData(_context);
             _sql = new SqlServices(configuration);
         }
 
@@ -50,21 +55,21 @@ namespace WMFACS_Review_List.Pages
                 }
                 else
                 {
-                    StaffUser = _ds.GetStaffMemberDetails(User.Identity.Name);
+                    StaffUser = _staffData.GetStaffMemberDetails(User.Identity.Name);
                     if (staffCode is null && StaffUser.POSITION != "Admin Team Leader")
                     {
                         staffCode = StaffUser.STAFF_CODE;
                     }
                 }
 
-                AdminList = _ds.GetStaffMemberListByRole("Admin");
-                GCList = _ds.GetStaffMemberListByRole("GC");
-                ConsList = _ds.GetStaffMemberListByRole("Consultant");
+                AdminList = _staffData.GetStaffMemberListByRole("Admin");
+                GCList = _staffData.GetStaffMemberListByRole("GC");
+                ConsList = _staffData.GetStaffMemberListByRole("Consultant");
 
-                AreaNamesList = _ds.GetAreaNamesList();
-                AdminStatusList = _ds.GetAdminStatusList();
-                PathwayList = _ds.GetPathwayList();
-                PatientReferralsList = _ds.GetPatientReferralsList();
+                AreaNamesList = _staticData.GetAreaNamesList();
+                AdminStatusList = _staticData.GetAdminStatusList();
+                PathwayList = _staticData.GetPathwayList();
+                PatientReferralsList = _referralData.GetPatientReferralsList();
 
                 int days;
 
@@ -119,20 +124,20 @@ namespace WMFACS_Review_List.Pages
                 }
                 else
                 {
-                    StaffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == User.Identity.Name);
+                    StaffUser = _staffData.GetStaffMemberDetails(User.Identity.Name);
                 }
                 
                 _sql.UpdateAreaNames(areaID.GetValueOrDefault(), admin, gc, consultant, StaffUser.STAFF_CODE, areaCode);
 
 
-                AdminList = _ds.GetStaffMemberListByRole("Admin");
-                GCList = _ds.GetStaffMemberListByRole("GC");
-                ConsList = _ds.GetStaffMemberListByRole("Consultant");
+                AdminList = _staffData.GetStaffMemberListByRole("Admin");
+                GCList = _staffData.GetStaffMemberListByRole("GC");
+                ConsList = _staffData.GetStaffMemberListByRole("Consultant");
 
-                AreaNamesList = _ds.GetAreaNamesList();
-                AdminStatusList = _ds.GetAdminStatusList();
-                PathwayList = _ds.GetPathwayList();
-                PatientReferralsList = _ds.GetPatientReferralsList();
+                AreaNamesList = _staticData.GetAreaNamesList();
+                AdminStatusList = _staticData.GetAdminStatusList();
+                PathwayList = _staticData.GetPathwayList();
+                PatientReferralsList = _referralData.GetPatientReferralsList();
 
                 DateTime FromDate = DateTime.Now.AddDays(-56);
 

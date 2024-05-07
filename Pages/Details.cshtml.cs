@@ -3,9 +3,6 @@ using WMFACS_Review_List.Data;
 using WMFACS_Review_List.Metadata;
 using WMFACS_Review_List.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Client;
 
 namespace WMFACS_Review_List.Pages
 {
@@ -13,14 +10,20 @@ namespace WMFACS_Review_List.Pages
     {
         private readonly DataContext _context;
         private IConfiguration _configuration;
-        private readonly DataServices _data;
+        private readonly ActivityData _activityData;
+        private readonly StaffData _staffData;
+        private readonly StaticData _staticData;
+        private readonly ReferralData _referralData;
         private readonly SqlServices _sql;
         
         public DetailsModel(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
-            _data = new DataServices(_context);
+            _activityData = new ActivityData(_context);
+            _staffData = new StaffData(_context);
+            _staticData = new StaticData(_context);
+            _referralData = new ReferralData(_context);
             _sql = new SqlServices(_configuration);
         }
         public PatientReferrals patientReferrals { get; set; }
@@ -34,9 +37,9 @@ namespace WMFACS_Review_List.Pages
         {
             try
             {                
-                patientReferrals = _data.GetReferralDetails(id);
-                adminStatusList = _data.GetAdminStatusList();
-                activityItemsList = _data.GetActivityItemsList(id);
+                patientReferrals = _referralData.GetReferralDetails(id);
+                adminStatusList = _staticData.GetAdminStatusList();
+                activityItemsList = _activityData.GetActivityItemsList(id);
 
             }
             catch(Exception ex)
@@ -50,11 +53,11 @@ namespace WMFACS_Review_List.Pages
         {
             try
             {
-                patientReferrals = _data.GetReferralDetails(id);
-                adminStatusList = _data.GetAdminStatusList();
-                activityItemsList = _data.GetActivityItemsList(id);
+                patientReferrals = _referralData.GetReferralDetails(id);
+                adminStatusList = _staticData.GetAdminStatusList();
+                activityItemsList = _activityData.GetActivityItemsList(id);
 
-                string staffCode = _data.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
+                string staffCode = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
 
                 _sql.UpdateReferralStatus(complete, adminStatus, staffCode, id);
 
