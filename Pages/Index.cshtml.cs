@@ -13,6 +13,7 @@ namespace WMFACS_Review_List.Pages
         private readonly StaffData _staffData;
         private readonly StaticData _staticData;
         private readonly ReferralData _referralData;
+        private readonly NotificationData _notificationData;
         private readonly SqlServices _sql;
 
 
@@ -23,6 +24,7 @@ namespace WMFACS_Review_List.Pages
             _staffData = new StaffData(_context);
             _staticData = new StaticData(_context);
             _referralData = new ReferralData(_context);
+            _notificationData = new NotificationData(_context);
             _sql = new SqlServices(configuration);
         }
 
@@ -36,6 +38,7 @@ namespace WMFACS_Review_List.Pages
         public IEnumerable<Pathways?> PathwayList { get; set; }
 
         public string? StaffMemberName { get; set; }
+        public string notificationMessage { get; set; }
         public bool isLive;
 
         public string? staffCodeSelected;
@@ -56,6 +59,7 @@ namespace WMFACS_Review_List.Pages
                 else
                 {
                     StaffUser = _staffData.GetStaffMemberDetails(User.Identity.Name);
+                    notificationMessage = _notificationData.GetMessage();
                     if (staffCode is null && StaffUser.POSITION != "Admin Team Leader")
                     {
                         staffCode = StaffUser.STAFF_CODE;

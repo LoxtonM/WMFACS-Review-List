@@ -12,5 +12,6 @@ namespace WMFACS_Review_List.Data //replace with your own data where appropriate
         public DbSet<AreaNames> AreaNames { get; set; }
         public DbSet<AdminStatuses> AdminStatuses { get; set; }
         public DbSet<Pathways> Pathways { get; set; }
+        public DbSet<Notifications> Notifications { get; set; }
     }
 }

@@ -86,4 +86,13 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         public string Staff3 { get; set; }
     }
 
+    [Table("Notifications", Schema = "dbo")]
+    public class Notifications
+    {
+        public int ID { get; set; }
+        public string MessageCode { get; set; }
+        public string Message { get; set; }
+        public bool IsActive { get; set; }
+    }
+
 }
