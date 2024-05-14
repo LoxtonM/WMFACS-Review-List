@@ -88,7 +88,7 @@ namespace WMFACS_Review_List.Metadata
                 _cmd.ExecuteNonQuery();
                 _con.Close();
 
-                CreateAudit(staffCode, "WMFACSUpdateAreas", aid);
+                //CreateAudit(staffCode, "WMFACSUpdateAreas", aid);
 
                 if (adminOldValue != admin)
                 {
@@ -133,7 +133,7 @@ namespace WMFACS_Review_List.Metadata
             _cmd.ExecuteNonQuery();
             _con.Close();
 
-            CreateAudit(staffCode, "WMFACSUpdateReferralStatus", id);
+            //CreateAudit(staffCode, "WMFACSUpdateReferralStatus", id);
             if (complete != completeOldValue)
             {
                 WriteAuditUpdate(staffCode, "COMPLETE", id, completeOldValue, complete, System.Environment.MachineName, "MasterActivityTable");

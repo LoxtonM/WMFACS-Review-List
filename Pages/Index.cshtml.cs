@@ -60,7 +60,7 @@ namespace WMFACS_Review_List.Pages
                 {
                     StaffUser = _staffData.GetStaffMemberDetails(User.Identity.Name);
                     notificationMessage = _notificationData.GetMessage();
-                    if (staffCode is null && StaffUser.POSITION != "Admin Team Leader")
+                    if (staffCode is null) // && StaffUser.POSITION != "Admin Team Leader")
                     {
                         staffCode = StaffUser.STAFF_CODE;
                     }
@@ -73,7 +73,7 @@ namespace WMFACS_Review_List.Pages
                 AreaNamesList = _staticData.GetAreaNamesList();
                 AdminStatusList = _staticData.GetAdminStatusList();
                 PathwayList = _staticData.GetPathwayList();
-                PatientReferralsList = _referralData.GetPatientReferralsList();
+                
 
                 int days;
 
@@ -89,8 +89,8 @@ namespace WMFACS_Review_List.Pages
                 }
 
                 DateTime FromDate = DateTime.Now.AddDays(-days);
-
-                PatientReferralsList = PatientReferralsList.Where(r => r.RefDate <= FromDate);
+                PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.RefDate <= FromDate);
+                //PatientReferralsList = PatientReferralsList.Where(r => r.RefDate <= FromDate);
 
                 if (staffCode != null)
                 {
