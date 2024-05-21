@@ -62,12 +62,14 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         public string? PATHWAY { get; set; }
         public string? Clics { get; set; }
         public string? RefType { get; set; }
-        public string? Admin_Contact { get; set; }
+        public string? AdminContactCode { get; set; }
+        public string? AdminContact { get; set; }
         public string? COMPLETE { get; set; }
         public bool logicaldelete { get; set; }
         public string? FIRSTNAME { get; set; }
         public string? LASTNAME { get; set; }
         public string? GC { get; set; }
+        public string? GC_CODE { get; set; }
     }
 
     [Table("vw_Appts_Diary_for_Review", Schema="dbo")]

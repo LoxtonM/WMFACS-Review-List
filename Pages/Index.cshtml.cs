@@ -90,11 +90,17 @@ namespace WMFACS_Review_List.Pages
 
                 DateTime FromDate = DateTime.Now.AddDays(-days);
                 PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.RefDate <= FromDate);
-                //PatientReferralsList = PatientReferralsList.Where(r => r.RefDate <= FromDate);
-
+                
                 if (staffCode != null)
                 {
-                    PatientReferralsList = PatientReferralsList.Where(r => r.Admin_Contact == staffCode);
+                    if (StaffUser.CLINIC_SCHEDULER_GROUPS == "Admin")
+                    {
+                        PatientReferralsList = PatientReferralsList.Where(r => r.AdminContactCode == staffCode);
+                    }
+                    else
+                    {
+                        PatientReferralsList = PatientReferralsList.Where(r => r.GC_CODE == staffCode);                        
+                    }
                     StaffMemberName = _context.StaffMembers.FirstOrDefault(s => s.STAFF_CODE == staffCode).NAME;
                     staffCodeSelected = staffCode;
                 }

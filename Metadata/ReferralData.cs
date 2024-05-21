@@ -18,7 +18,7 @@ namespace WMFACS_Review_List.Metadata
             var patientReferralsList = _context.PatientReferrals.Where(r => r.RefType.Contains("Refer") 
                                                                         && r.COMPLETE != "Complete" 
                                                                         && r.logicaldelete == false 
-                                                                        && r.Admin_Contact != null).OrderBy(r => r.WeeksFromReferral).ToList();
+                                                                        && r.AdminContactCode != null).OrderBy(r => r.WeeksFromReferral).ToList();
 
             return patientReferralsList;
         }
