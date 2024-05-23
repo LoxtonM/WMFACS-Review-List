@@ -1,13 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Reflection.Metadata;
-using System;
-using Microsoft.VisualBasic;
-using static System.Net.Mime.MediaTypeNames;
 using System.Data;
-using WMFACS_Review_List.Models;
-using System.Xml;
-using System.Numerics;
+
 
 namespace WMFACS_Review_List.Metadata
 {
@@ -25,14 +18,13 @@ namespace WMFACS_Review_List.Metadata
         }
 
         public void UpdateAreaNames(int areaID, string admin, string gc, string consultant, string staffCode, string? areaCode)
-        {
-            string cmdText="";
+        {            
             string dateEdited = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string adminOldValue = "";
             string gcOldValue = "";
             string consultantOldValue = "";
 
-            cmdText = $"select FHCStaffCode, GC, ConsCode from ListAreaNames where AreaID = {areaID}";
+            string cmdText = $"select FHCStaffCode, GC, ConsCode from ListAreaNames where AreaID = {areaID}";
             _cmd.CommandText = cmdText;
             _con.Open();
             using (var reader = _cmd.ExecuteReader())
@@ -66,16 +58,7 @@ namespace WMFACS_Review_List.Metadata
             {
                 areaIDs.Add(areaID);
             }
-
-            int bleh = areaIDs.Count;
-
-            //if (areaCode != null)
-            //{               
-            //    cmdText = $"Update ListAreaNames set FHCStaffCode='{admin}', GC='{gc}', ConsCode='{consultant}', WhoLastEdit='{staffCode}', " +
-            //        $"DateLastEdit='{dateEdited}' where AreaCode='{areaCode}'";
-            //}
-            //else
-            //{
+                        
             foreach (var aid in areaIDs)
             {
                 cmdText = $"Update ListAreaNames set FHCStaffCode='{admin}', GC='{gc}', ConsCode='{consultant}', WhoLastEdit='{staffCode}', " +
@@ -88,7 +71,7 @@ namespace WMFACS_Review_List.Metadata
                 _cmd.ExecuteNonQuery();
                 _con.Close();
 
-                //CreateAudit(staffCode, "WMFACSUpdateAreas", aid);
+                CreateUsageAudit(staffCode, "WMFACS-X - Update Areas", $"AreaID={aid.ToString()}");
 
                 if (adminOldValue != admin)
                 {
@@ -133,7 +116,7 @@ namespace WMFACS_Review_List.Metadata
             _cmd.ExecuteNonQuery();
             _con.Close();
 
-            //CreateAudit(staffCode, "WMFACSUpdateReferralStatus", id);
+            CreateUsageAudit(staffCode, "WMFACS-X - Update Referral Status", $"RefID={id.ToString()}");
             if (complete != completeOldValue)
             {
                 WriteAuditUpdate(staffCode, "COMPLETE", id, completeOldValue, complete, System.Environment.MachineName, "MasterActivityTable");
@@ -143,14 +126,16 @@ namespace WMFACS_Review_List.Metadata
                 WriteAuditUpdate(staffCode, "Status_Admin", id, adminStatusOldValue, adminStatus, System.Environment.MachineName, "MasterActivityTable");
             }
         }
-        public void CreateAudit(string staffCode, string formName, int recordPrimaryKey)
+        public void CreateUsageAudit(string staffCode, string formName, string? searchTerm="")
         {
             _con.Open();
             SqlCommand cmd = new SqlCommand("dbo.sp_CreateAudit", _con);            
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@staffCode", SqlDbType.VarChar).Value = staffCode;
             cmd.Parameters.Add("@form", SqlDbType.VarChar).Value = formName;
-            cmd.Parameters.Add("@recordkey", SqlDbType.Int).Value = recordPrimaryKey;            
+            cmd.Parameters.Add("@database", SqlDbType.VarChar).Value = "CGU_DB";
+            cmd.Parameters.Add("@machine", SqlDbType.VarChar).Value = System.Environment.MachineName;
+            cmd.Parameters.Add("@searchTerm", SqlDbType.VarChar).Value = searchTerm;      
             cmd.ExecuteNonQuery();
             _con.Close();
         }

@@ -64,6 +64,7 @@ namespace WMFACS_Review_List.Pages
                     {
                         staffCode = StaffUser.STAFF_CODE;
                     }
+                    _sql.CreateUsageAudit(StaffUser.STAFF_CODE, "WMFACS-X - Home");
                 }
 
                 AdminList = _staffData.GetStaffMemberListByRole("Admin");

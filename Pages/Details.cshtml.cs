@@ -40,7 +40,8 @@ namespace WMFACS_Review_List.Pages
                 patientReferrals = _referralData.GetReferralDetails(id);
                 adminStatusList = _staticData.GetAdminStatusList();
                 activityItemsList = _activityData.GetActivityItemsList(id);
-
+                string staffCode = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
+                _sql.CreateUsageAudit(staffCode, "WMFACS-X - Review Details", "RefID=" + id.ToString());
             }
             catch(Exception ex)
             {
