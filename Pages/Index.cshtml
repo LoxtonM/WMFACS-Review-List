@@ -14,24 +14,24 @@
 
         @if (!Model.isLive)
         {
-            <h1 class="text-center" style="color:red">NOTE: This is a test system, work completed here will not be reflected in production</h1>
+            <h1 class="text-center redtext">NOTE: This is a test system, work completed here will not be reflected in production</h1>
         }
 
         @if (Model.notificationMessage != null && Model.notificationMessage != "")
         {
-            <h1 class="text-center" style="color:red">@Model.notificationMessage</h1>
+            <h1 class="text-center redtext">@Model.notificationMessage</h1>
         }
 
         <form id="frmSelect">
             <div class="row mb-5 g-5">            
-                <div class="col-md-1" style="text-align:right">
+                <div class="col-md-1">
                     @if (Model.StaffUser.CLINIC_SCHEDULER_GROUPS == "Admin")
                     {
-                        <label class="w-100">Admin Contact</label>
+                        <label class="w-100 text-right">Admin Contact</label>
                     }
                     else
                     {
-                        <label class="w-100">GC</label>
+                        <label class="w-100 text-right">GC</label>
                     }
                 </div>
                 <div class="col-md-2">
@@ -56,8 +56,8 @@
                         </select>
                     }
                 </div>
-                <div class="col-md-1" style="text-align:right">
-                    <label class="w-100">Admin Status</label>
+                <div class="col-md-1">
+                    <label class="w-100 text-right">Admin Status</label>
                 </div>
                 <div class="col-md-2">
                     <select class="w-100" id="ddlAdminStatus" name="adminStatus" asp-for=@Model.adminStatusSelected>
@@ -68,14 +68,14 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-1"  style="text-align:right">
-                    <label class="w-100">Weeks</label>
+                <div class="col-md-1">
+                    <label class="w-100 text-right">Weeks</label>
                 </div>
                 <div class="col-md-1">
-                    <input class="w-100" name="weeks" style="width:40px" asp-for=@Model.weeksSelected />
+                    <input class="w-100" name="weeks" asp-for=@Model.weeksSelected />
                 </div>
-                <div class="col-md-1" style="text-align:right">
-                    <label class="w-100">Pathway</label>
+                <div class="col-md-1">
+                    <label class="w-100 text-right">Pathway</label>
                 </div>
                 <div class="col-md-1">
                     <select class="w-100" id="ddlPathway" name="pathway" asp-for=@Model.pathwaySelected>
@@ -92,17 +92,17 @@
                 </div>                
             </div>             
         </form>
-    
+
         @if (Model.StaffUser.POSITION == "Admin Team Leader")
         {
-            <div class="container" style="border:solid">
+            <div class="container stdborder">
                 <div class="row mb-2 g-2">
                     <h2>Area Staff Cover for Cancer</h2>
                 </div>
                 <form id="frmUpdate" method="Post">
                     <div class="row mb-2 g-2">
-                        <div class="col-md-2" style="text-align:right">
-                            <label>Area name:</label>
+                        <div class="col-md-2">
+                            <label text-right>Area name:</label>
                         </div>
                         <div class="col-md-3">
                             <select id="ddlAreaName" name="areaID" onchange="ShowStaff()">
@@ -113,8 +113,8 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-2" style="text-align:right">
-                            <label>Admin</label>
+                        <div class="col-md-2">
+                            <label class="text-right">Admin</label>
                         </div>
                         <div class="col-md-3">
                             <select id="ddlnewAdmin" name="admin">
@@ -131,8 +131,8 @@
                     </div>
                     <div class="row mb-2 g-2">
                         <div class="col-md-5"></div>
-                        <div class="col-md-2" style="text-align:right">
-                            <label>GC</label>
+                        <div class="col-md-2">
+                            <label class="text-right">GC</label>
                         </div>
                         <div class="col-md-3">
                             <select id="ddlnewGC" name = "gc">
@@ -149,8 +149,8 @@
                     </div>                
                     <div class="row mb-2 g-2">
                         <div class="col-md-5"></div>
-                        <div class="col-md-2" style="text-align:right">
-                            <label>Consultant</label>
+                        <div class="col-md-2">
+                            <label class="text-right">Consultant</label>
                         </div>
                         <div class="col-md-3">
                             <select id="ddlnewCons" name = "consultant">

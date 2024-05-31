@@ -14,9 +14,9 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         public string? NAME { get; set; }        
         public string? POSITION { get; set; }
         public bool InPost { get; set; }  
-        public string CLINIC_SCHEDULER_GROUPS { get; set; }
+        public string? CLINIC_SCHEDULER_GROUPS { get; set; }
     }
-
+    
     [Table("ListAreaNames", Schema = "dbo")]
     public class AreaNames
     {

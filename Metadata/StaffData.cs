@@ -29,7 +29,7 @@ namespace WMFACS_Review_List.Metadata
         public List<StaffMembers> GetStaffMemberListByRole(string jobRole)
         {
             var staffList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == jobRole && s.InPost == true).OrderBy(s => s.NAME).ToList();
-
+            
             return staffList;
         }
 

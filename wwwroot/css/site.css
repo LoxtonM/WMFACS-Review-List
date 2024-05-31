@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.redtext {
+    color: red;
+}
+
+.stdborder {
+    border: solid;
+}
