@@ -66,8 +66,7 @@ namespace WMFACS_Review_List.Pages
                     }
                     _sql.CreateUsageAudit(StaffUser.STAFF_CODE, "WMFACS-X - Home");
                 }
-
-                staffCode = staffCode.ToUpper();
+                                
                 
                 AdminList = _staffData.GetStaffMemberListByRole("Admin");
                 GCList = _staffData.GetStaffMemberListByRole("GC");
@@ -99,6 +98,7 @@ namespace WMFACS_Review_List.Pages
 
                 if (staffCode != null)
                 {
+                    staffCode = staffCode.ToUpper();
                     if (StaffUser.CLINIC_SCHEDULER_GROUPS == "Admin")
                     {
                         PatientReferralsList = PatientReferralsList.Where(r => r.AdminContactCode.ToUpper() == staffCode);
