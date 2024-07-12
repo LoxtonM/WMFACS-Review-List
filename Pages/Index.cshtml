@@ -22,6 +22,12 @@
             <h1 class="text-center redtext">@Model.notificationMessage</h1>
         }
 
+        <div class="row mb-5">
+            <div class="col-md-2">
+                <a class="btn btn-secondary" asp-area="" asp-page="/Download" asp-route-staffCode=@Model.staffCodeSelected asp-route-weeksFromReferral=@Model.weeksSelected asp-route-adminStatus=@Model.adminStatusSelected asp-route-pathway=@Model.pathwaySelected>Export Data</a>
+            </div>
+        </div>
+
         <form id="frmSelect">
             <div class="row mb-5 g-5">            
                 <div class="col-md-1">

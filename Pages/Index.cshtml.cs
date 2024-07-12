@@ -66,6 +66,8 @@ namespace WMFACS_Review_List.Pages
                     }
                     _sql.CreateUsageAudit(StaffUser.STAFF_CODE, "WMFACS-X - Home");
                 }
+
+                staffCode = staffCode.ToUpper();
                 
                 AdminList = _staffData.GetStaffMemberListByRole("Admin");
                 GCList = _staffData.GetStaffMemberListByRole("GC");
@@ -86,23 +88,26 @@ namespace WMFACS_Review_List.Pages
                 else
                 {
                     days = 56;
+                    weeks = 8;
                     weeksSelected = 8;
                 }
 
                 DateTime FromDate = DateTime.Now.AddDays(-days);
-                PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.RefDate <= FromDate);
-                
+                //PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.RefDate <= FromDate);
+                PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.WeeksFromReferral >= weeks);
+
+
                 if (staffCode != null)
                 {
                     if (StaffUser.CLINIC_SCHEDULER_GROUPS == "Admin")
                     {
-                        PatientReferralsList = PatientReferralsList.Where(r => r.AdminContactCode == staffCode);
+                        PatientReferralsList = PatientReferralsList.Where(r => r.AdminContactCode.ToUpper() == staffCode);
                     }
                     else
                     {
-                        PatientReferralsList = PatientReferralsList.Where(r => r.GC_CODE == staffCode);                        
+                        PatientReferralsList = PatientReferralsList.Where(r => r.GC_CODE.ToUpper() == staffCode);                        
                     }
-                    StaffMemberName = _context.StaffMembers.FirstOrDefault(s => s.STAFF_CODE == staffCode).NAME;
+                    StaffMemberName = _context.StaffMembers.FirstOrDefault(s => s.STAFF_CODE.ToUpper() == staffCode).NAME;
                     staffCodeSelected = staffCode;
                 }
 
@@ -125,7 +130,7 @@ namespace WMFACS_Review_List.Pages
             }
         }
 
-        public void OnPost(int? areaID, string? admin, string? gc, string? consultant, string? areaCode)
+        public void OnPost(int? areaID, string? admin, string? gc, string? consultant, string? areaCode, int? weeks)
         {
             try
             {
@@ -148,11 +153,12 @@ namespace WMFACS_Review_List.Pages
                 AreaNamesList = _staticData.GetAreaNamesList();
                 AdminStatusList = _staticData.GetAdminStatusList();
                 PathwayList = _staticData.GetPathwayList();
-                PatientReferralsList = _referralData.GetPatientReferralsList();
+                //PatientReferralsList = _referralData.GetPatientReferralsList();
+                PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.WeeksFromReferral >= weeks);
 
-                DateTime FromDate = DateTime.Now.AddDays(-56);
+                //DateTime FromDate = DateTime.Now.AddDays(-56);
 
-                PatientReferralsList = PatientReferralsList.Where(r => r.RefDate >= FromDate);
+                //PatientReferralsList = PatientReferralsList.Where(r => r.RefDate >= FromDate);
             }
             catch (Exception ex)
             {
