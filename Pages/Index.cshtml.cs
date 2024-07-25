@@ -48,7 +48,7 @@ namespace WMFACS_Review_List.Pages
 
 
         [Authorize]
-        public void OnGet(string? staffCode, string? adminStatus, string? pathway, int? weeks)
+        public void OnGet(string? staffCode, string? adminStatus, string? pathway, int? weeks, string? gcFilter)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace WMFACS_Review_List.Pages
                 {
                     StaffUser = _staffData.GetStaffMemberDetails(User.Identity.Name);
                     notificationMessage = _notificationData.GetMessage();
-                    if (staffCode is null) // && StaffUser.POSITION != "Admin Team Leader")
+                    if (staffCode is null && gcFilter is null) // && StaffUser.POSITION != "Admin Team Leader")
                     {
                         staffCode = StaffUser.STAFF_CODE;
                     }
@@ -122,6 +122,16 @@ namespace WMFACS_Review_List.Pages
                     PatientReferralsList = PatientReferralsList.Where(r => r.PATHWAY == pathway);
                     pathwaySelected = pathway;
                 }
+
+                if(gcFilter != null)
+                {
+                    PatientReferralsList = PatientReferralsList.Where(r => r.GC_CODE == gcFilter);
+                    if(staffCode == null)
+                    {
+                        staffCodeSelected = null;
+                    }
+                }
+
                 isLive = bool.Parse(_configuration.GetValue("IsLive", ""));
             }
             catch (Exception ex)
@@ -130,7 +140,7 @@ namespace WMFACS_Review_List.Pages
             }
         }
 
-        public void OnPost(int? areaID, string? admin, string? gc, string? consultant, string? areaCode, int? weeks)
+        public void OnPost(int? areaID, string? admin, string? gc, string? consultant, string? areaCode, int? weeks, string? gcFilter)
         {
             try
             {

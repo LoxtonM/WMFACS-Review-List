@@ -96,7 +96,24 @@
                 <div class="col-md-1">
                     <button id="btnSubmit">Select</button>
                 </div>                
-            </div>             
+            </div>
+            @if (Model.StaffUser.POSITION == "Admin Team Leader")
+            {
+               <div class="row mb-5 g-5">
+                    <div class="col-md-1">
+                        <label class="w-100 text-right">GC</label>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="w-100" name="gcFilter" asp-for=@Model.staffCodeSelected>
+                            <option value="">Select...</option>
+                            @foreach (var item in Model.GCList)
+                            {
+                                <option value=@item.STAFF_CODE>@item.NAME</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            }
         </form>
 
         @if (Model.StaffUser.POSITION == "Admin Team Leader")
