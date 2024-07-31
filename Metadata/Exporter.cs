@@ -141,12 +141,20 @@ namespace PatientTrackingList.DataServices
 
         [HttpGet("download")]
         //public async Task<IActionResult> DownloadFile(string filePath)
-        public async Task<IActionResult> DownloadFile(string staffCode, int weeksFromReferral, string? adminStatus, string? pathway)
+        public async Task<IActionResult> DownloadFile(string staffCode, int weeksFromReferral, string? adminStatus, string? pathway, string? gcCode)
         {
             
             List<PatientReferrals> listToExport = new List<PatientReferrals>();
-            
-            listToExport = _referralData.GetPatientReferralsList().Where(r => r.AdminContactCode.ToUpper() == staffCode & r.WeeksFromReferral >= weeksFromReferral).ToList();
+
+            if (gcCode != null)
+            {
+                staffCode = gcCode.ToUpper();
+                listToExport = _referralData.GetPatientReferralsList().Where(r => r.GC_CODE.ToUpper() == staffCode & r.WeeksFromReferral >= weeksFromReferral).ToList();
+            }
+            else
+            {
+                listToExport = _referralData.GetPatientReferralsList().Where(r => r.AdminContactCode.ToUpper() == staffCode & r.WeeksFromReferral >= weeksFromReferral).ToList();
+            }
 
             int days = weeksFromReferral * 7;
             DateTime FromDate = DateTime.Now.AddDays(-days);

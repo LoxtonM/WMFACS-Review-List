@@ -24,7 +24,7 @@
 
         <div class="row mb-5">
             <div class="col-md-2">
-                <a class="btn btn-secondary" asp-area="" asp-page="/Download" asp-route-staffCode=@Model.staffCodeSelected asp-route-weeksFromReferral=@Model.weeksSelected asp-route-adminStatus=@Model.adminStatusSelected asp-route-pathway=@Model.pathwaySelected>Export Data</a>
+                <a class="btn btn-secondary" asp-area="" asp-page="/Download" asp-route-staffCode=@Model.staffCodeSelected asp-route-weeksFromReferral=@Model.weeksSelected asp-route-adminStatus=@Model.adminStatusSelected asp-route-pathway=@Model.pathwaySelected asp-route-gcCode=@Model.gcCodeSelected>Export Data</a>
             </div>
         </div>
 
@@ -104,7 +104,7 @@
                         <label class="w-100 text-right">GC</label>
                     </div>
                     <div class="col-md-2">
-                        <select class="w-100" name="gcFilter" asp-for=@Model.staffCodeSelected>
+                        <select class="w-100" name="gcFilter" asp-for=@Model.gcCodeSelected>
                             <option value="">Select...</option>
                             @foreach (var item in Model.GCList)
                             {

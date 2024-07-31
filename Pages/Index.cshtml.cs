@@ -45,6 +45,7 @@ namespace WMFACS_Review_List.Pages
         public string? adminStatusSelected;
         public string? pathwaySelected;
         public int? weeksSelected;
+        public string? gcCodeSelected;
 
 
         [Authorize]
@@ -126,6 +127,7 @@ namespace WMFACS_Review_List.Pages
                 if(gcFilter != null)
                 {
                     PatientReferralsList = PatientReferralsList.Where(r => r.GC_CODE == gcFilter);
+                    gcCodeSelected = gcFilter;
                     if(staffCode == null)
                     {
                         staffCodeSelected = null;
