@@ -97,6 +97,17 @@
                     <button id="btnSubmit">Select</button>
                 </div>                
             </div>
+            <div class="row mb-5 g-5">
+                <div class="col-md-2">
+                    <label>Show only active clocks:</label>
+                </div>
+                <div class="col-md-2">
+                    <input type="checkbox" id="chkShowTicking" asp-for=@Model.showTicking onchange="SetTickBox()" />
+                    <input type="text" id="txtShowTicking" name="isShowTicking" hidden="true" />
+                </div>
+            </div>
+
+
             @if (Model.StaffUser.POSITION == "Admin Team Leader")
             {
                <div class="row mb-5 g-5">
@@ -149,7 +160,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" id="btnUpdate" disabled="true">Update</button>
+                            <button type="button" id="btnUpdate" disabled="true" onclick="UpdateArea()">Update</button>
                         </div>
                     </div>
                     <div class="row mb-2 g-2">
@@ -167,7 +178,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" id="btnUpdateAll" disabled="true">Update All </button>
+                            <button type="button" id="btnUpdateAll" disabled="true" onclick="UpdateAllAreas()">Update All </button>
                         </div>
                     </div>                
                     <div class="row mb-2 g-2">
@@ -269,10 +280,16 @@
 </div>
 
 <script>
-    document.getElementById("btnUpdate").addEventListener("click", UpdateArea);
-    document.getElementById("btnUpdateAll").addEventListener("click", UpdateAllAreas);
+    //document.getElementById("btnUpdate").addEventListener("click", UpdateArea);
+    //document.getElementById("btnUpdateAll").addEventListener("click", UpdateAllAreas);
+    window.addEventListener("load", SetTickBox);
     //document.getElementById("ddlAreaName").addEventListener("change", ShowStaff);
     //document.onload(LoadForm());
+
+    function SetTickBox()
+    {       
+        document.getElementById("txtShowTicking").value = document.getElementById("chkShowTicking").checked;
+    }
 
     function UpdateArea() 
     { 

@@ -46,10 +46,11 @@ namespace WMFACS_Review_List.Pages
         public string? pathwaySelected;
         public int? weeksSelected;
         public string? gcCodeSelected;
+        public bool showTicking;
 
 
         [Authorize]
-        public void OnGet(string? staffCode, string? adminStatus, string? pathway, int? weeks, string? gcFilter)
+        public void OnGet(string? staffCode, string? adminStatus, string? pathway, int? weeks, string? gcFilter, bool? isShowTicking=true)
         {
             try
             {
@@ -77,6 +78,7 @@ namespace WMFACS_Review_List.Pages
                 AdminStatusList = _staticData.GetAdminStatusList();
                 PathwayList = _staticData.GetPathwayList();
                 
+                showTicking = isShowTicking.GetValueOrDefault();
 
                 int days;
 
@@ -96,6 +98,10 @@ namespace WMFACS_Review_List.Pages
                 //PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.RefDate <= FromDate);
                 PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.WeeksFromReferral >= weeks);
 
+                if(isShowTicking.GetValueOrDefault())
+                {
+                    PatientReferralsList = PatientReferralsList.Where(r => r.ClockStopDate == null);
+                }
 
                 if (staffCode != null)
                 {
@@ -142,7 +148,7 @@ namespace WMFACS_Review_List.Pages
             }
         }
 
-        public void OnPost(int? areaID, string? admin, string? gc, string? consultant, string? areaCode, int? weeks, string? gcFilter)
+        public void OnPost(int? areaID, string? admin, string? gc, string? consultant, string? areaCode, int? weeks, string? gcFilter, bool isShowTicking)
         {
             try
             {
