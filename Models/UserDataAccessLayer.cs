@@ -27,7 +27,7 @@ namespace WMFACS_Review_List.Models
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("sp_CXValidateUserLogin", con);
+                SqlCommand cmd = new SqlCommand("sp_ValidateUserLogin", con);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@LoginID", user.EMPLOYEE_NUMBER);
                 cmd.Parameters.AddWithValue("@LoginPassword", user.PASSWORD);
