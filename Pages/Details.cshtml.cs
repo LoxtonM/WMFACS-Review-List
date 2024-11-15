@@ -3,33 +3,38 @@ using WMFACS_Review_List.Data;
 using WMFACS_Review_List.Metadata;
 using WMFACS_Review_List.Models;
 using Microsoft.AspNetCore.Authorization;
+using ClinicalXPDataConnections.Meta;
+using ClinicalXPDataConnections.Data;
+using ClinicalXPDataConnections.Models;
 
 namespace WMFACS_Review_List.Pages
 {
     public class DetailsModel : PageModel
     {
-        private readonly DataContext _context;
+        private readonly ClinicalContext _context;
+        private readonly DataContext _dataContext;
         private IConfiguration _configuration;
-        private readonly ActivityData _activityData;
+        private readonly ReviewItemData _reviewItemData;
         private readonly StaffData _staffData;
         private readonly StaticData _staticData;
         private readonly ReferralData _referralData;
         private readonly SqlServices _sql;
         
-        public DetailsModel(DataContext context, IConfiguration configuration)
+        public DetailsModel(ClinicalContext context, DataContext dataContext, IConfiguration configuration)
         {
             _context = context;
+            _dataContext = dataContext;
             _configuration = configuration;
-            _activityData = new ActivityData(_context);
+            _reviewItemData = new ReviewItemData(_dataContext);
             _staffData = new StaffData(_context);
-            _staticData = new StaticData(_context);
+            _staticData = new StaticData(_context, _dataContext);
             _referralData = new ReferralData(_context);
             _sql = new SqlServices(_configuration);
         }
-        public PatientReferrals patientReferrals { get; set; }
+        public Referral patientReferrals { get; set; }
         public IEnumerable<AdminStatuses> adminStatusList { get; set; }
-        public IEnumerable<ActivityItems> activityItemsList { get; set; }
-        public StaffMembers? StaffUser { get; set; }
+        public IEnumerable<ReviewItems> activityItemsList { get; set; }
+        public StaffMember? StaffUser { get; set; }
         
 
         [Authorize]
@@ -39,7 +44,7 @@ namespace WMFACS_Review_List.Pages
             {                
                 patientReferrals = _referralData.GetReferralDetails(id);
                 adminStatusList = _staticData.GetAdminStatusList();
-                activityItemsList = _activityData.GetActivityItemsList(id);
+                activityItemsList = _reviewItemData.GetActivityItemsList(id);
                 string staffCode = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
                 _sql.CreateUsageAudit(staffCode, "WMFACS-X - Review Details", "RefID=" + id.ToString());
             }
@@ -56,7 +61,7 @@ namespace WMFACS_Review_List.Pages
             {
                 patientReferrals = _referralData.GetReferralDetails(id);
                 adminStatusList = _staticData.GetAdminStatusList();
-                activityItemsList = _activityData.GetActivityItemsList(id);
+                activityItemsList = _reviewItemData.GetActivityItemsList(id);
 
                 string staffCode = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
 

@@ -1,21 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-using System.Xml.Serialization;
+
 
 namespace WMFACS_Review_List.Models //replace with your own data where appropriate
-{
-    [Table("STAFF", Schema = "dbo")]
-    public class StaffMembers
-    {
-        [Key]
-        public string STAFF_CODE { get; set; }
-        public string? EMPLOYEE_NUMBER { get; set; }
-        public string? NAME { get; set; }        
-        public string? POSITION { get; set; }
-        public bool InPost { get; set; }  
-        public string? CLINIC_SCHEDULER_GROUPS { get; set; }
-    }
+{    
     
     [Table("ListAreaNames", Schema = "dbo")]
     public class AreaNames
@@ -38,42 +26,9 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         [Key]
         public string? Status_Admin { get; set; }
     }
-
-    [Table("PATHWAY", Schema = "dbo")]
-    public class Pathways
-    {
-        [Key]
-        public string CGU_Pathway { get; set; }
-    }
-
-    [Table("ViewPatientReferralDetails", Schema = "dbo")]   
-    public class PatientReferrals
-    {
-        [Key]
-        public int refid { get; set; }
-        public string? CGU_No { get; set; }
-        public int? WeeksFromReferral { get; set; }
-        public int? DaysFromReferral { get; set; }
-        public string? Status_Admin { get; set; }
-        public DateTime? ClockStartDate { get; set; }
-        public DateTime? ClockStopDate { get; set; }
-        public DateTime? BreachDate { get; set; }
-        public DateTime? RefDate { get; set; }
-        public string? PATHWAY { get; set; }
-        public string? Clics { get; set; }
-        public string? RefType { get; set; }
-        public string? AdminContactCode { get; set; }
-        public string? AdminContact { get; set; }
-        public string? COMPLETE { get; set; }
-        public bool logicaldelete { get; set; }
-        public string? FIRSTNAME { get; set; }
-        public string? LASTNAME { get; set; }
-        public string? GC { get; set; }
-        public string? GC_CODE { get; set; }
-    }
-
+        
     [Table("vw_Appts_Diary_for_Review", Schema="dbo")]
-    public class ActivityItems
+    public class ReviewItems
     {
         [Key]
         public int ID { get; set; }
@@ -86,15 +41,6 @@ namespace WMFACS_Review_List.Models //replace with your own data where appropria
         public string Staff1 { get; set; }
         public string Staff2 { get; set; }
         public string Staff3 { get; set; }
-    }
-
-    [Table("Notifications", Schema = "dbo")]
-    public class Notifications
-    {
-        public int ID { get; set; }
-        public string MessageCode { get; set; }
-        public string Message { get; set; }
-        public bool IsActive { get; set; }
-    }
+    }  
 
 }

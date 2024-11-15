@@ -1,32 +1,33 @@
 ﻿using WMFACS_Review_List.Data;
-using WMFACS_Review_List.Models;
+using ClinicalXPDataConnections.Models;
+using ClinicalXPDataConnections.Data;
 
 namespace WMFACS_Review_List.Metadata
 {
     public class StaffData
     {
-        private readonly DataContext _context;
+        private readonly ClinicalContext _context;
         
-        public StaffData(DataContext context) 
+        public StaffData(ClinicalContext context) 
         {
             _context = context;
         }
 
-        public StaffMembers GetStaffMemberDetails(string username)
+        public StaffMember GetStaffMemberDetails(string username)
         {
             var staffUser = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == username);
 
             return staffUser;
         }
 
-        public StaffMembers GetStaffMemberDetailsByStaffCode(string staffCode)
+        public StaffMember GetStaffMemberDetailsByStaffCode(string staffCode)
         {
             var staffUser = _context.StaffMembers.FirstOrDefault(s => s.STAFF_CODE == staffCode);
 
             return staffUser;
         }
 
-        public List<StaffMembers> GetStaffMemberListByRole(string jobRole)
+        public List<StaffMember> GetStaffMemberListByRole(string jobRole)
         {
             var staffList = _context.StaffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == jobRole && s.InPost == true).OrderBy(s => s.NAME).ToList();
             

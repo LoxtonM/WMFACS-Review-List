@@ -3,12 +3,16 @@ using WMFACS_Review_List.Data;
 using WMFACS_Review_List.Models;
 using Microsoft.AspNetCore.Authorization;
 using WMFACS_Review_List.Metadata;
+using ClinicalXPDataConnections.Data;
+using ClinicalXPDataConnections.Meta;
+using ClinicalXPDataConnections.Models;
 
 namespace WMFACS_Review_List.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly DataContext _context;
+        private readonly ClinicalContext _context;
+        private readonly DataContext _dataContext;
         private readonly IConfiguration _configuration;
         private readonly StaffData _staffData;
         private readonly StaticData _staticData;
@@ -17,25 +21,26 @@ namespace WMFACS_Review_List.Pages
         private readonly SqlServices _sql;
 
 
-        public IndexModel(DataContext context, IConfiguration configuration)
+        public IndexModel(ClinicalContext context, DataContext dataContext, IConfiguration configuration)
         {
             _context = context;
+            _dataContext = dataContext;
             _configuration = configuration;
             _staffData = new StaffData(_context);
-            _staticData = new StaticData(_context);
+            _staticData = new StaticData(_context, _dataContext);
             _referralData = new ReferralData(_context);
             _notificationData = new NotificationData(_context);
             _sql = new SqlServices(configuration);
         }
 
-        public IEnumerable<StaffMembers?> AdminList { get; set; }
-        public IEnumerable<StaffMembers?> GCList { get; set; }
-        public IEnumerable<StaffMembers?> ConsList { get; set; }
-        public StaffMembers? StaffUser { get; set; }
-        public IEnumerable<PatientReferrals?> PatientReferralsList { get; set; }
+        public IEnumerable<StaffMember?> AdminList { get; set; }
+        public IEnumerable<StaffMember?> GCList { get; set; }
+        public IEnumerable<StaffMember?> ConsList { get; set; }
+        public StaffMember? StaffUser { get; set; }
+        public IEnumerable<Referral?> PatientReferralsList { get; set; }
         public IEnumerable<AreaNames?> AreaNamesList { get; set; }
         public IEnumerable<AdminStatuses?> AdminStatusList { get; set; }
-        public IEnumerable<Pathways?> PathwayList { get; set; }
+        public IEnumerable<Pathway?> PathwayList { get; set; }
 
         public string? StaffMemberName { get; set; }
         public string notificationMessage { get; set; }
@@ -96,7 +101,7 @@ namespace WMFACS_Review_List.Pages
 
                 DateTime FromDate = DateTime.Now.AddDays(-days);
                 //PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.RefDate <= FromDate);
-                PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.WeeksFromReferral >= weeks);
+                PatientReferralsList = _referralData.GetActiveReferralsList().Where(r => r.WeeksFromReferral >= weeks);
 
                 if(isShowTicking.GetValueOrDefault())
                 {
@@ -172,7 +177,7 @@ namespace WMFACS_Review_List.Pages
                 AdminStatusList = _staticData.GetAdminStatusList();
                 PathwayList = _staticData.GetPathwayList();
                 //PatientReferralsList = _referralData.GetPatientReferralsList();
-                PatientReferralsList = _referralData.GetPatientReferralsList().Where(r => r.WeeksFromReferral >= weeks);
+                PatientReferralsList = _referralData.GetActiveReferralsList().Where(r => r.WeeksFromReferral >= weeks);
 
                 //DateTime FromDate = DateTime.Now.AddDays(-56);
 

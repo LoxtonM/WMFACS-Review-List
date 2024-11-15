@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WMFACS_Review_List.Data;
-using WMFACS_Review_List.Models;
+using ClinicalXPDataConnections.Models;
 using System.Data;
-using WMFACS_Review_List.Metadata;
+using ClinicalXPDataConnections.Meta;
+using ClinicalXPDataConnections.Data;
 
 
 namespace PatientTrackingList.DataServices
@@ -10,15 +11,15 @@ namespace PatientTrackingList.DataServices
     public class Exporter : Controller
     {
         public string dlFilePath;
-        private readonly DataContext _context;
+        private readonly ClinicalContext _context;
         private readonly ReferralData _referralData;
-        
-        public Exporter(DataContext context)
+
+        public Exporter(ClinicalContext context)
         {
             _context = context;
             _referralData = new ReferralData(_context);
         }
-        public void ExportList(List<PatientReferrals> listToExport, string adminUsername)
+        public void ExportList(List<Referral> listToExport, string adminUsername)
         {
             DataTable table = new DataTable();
             
@@ -144,16 +145,16 @@ namespace PatientTrackingList.DataServices
         public async Task<IActionResult> DownloadFile(string staffCode, int weeksFromReferral, string? adminStatus, string? pathway, string? gcCode)
         {
             
-            List<PatientReferrals> listToExport = new List<PatientReferrals>();
+            List<Referral> listToExport = new List<Referral>();
 
             if (gcCode != null)
             {
                 staffCode = gcCode.ToUpper();
-                listToExport = _referralData.GetPatientReferralsList().Where(r => r.GC_CODE.ToUpper() == staffCode & r.WeeksFromReferral >= weeksFromReferral).ToList();
+                listToExport = _referralData.GetActiveReferralsList().Where(r => r.GC_CODE.ToUpper() == staffCode & r.WeeksFromReferral >= weeksFromReferral).ToList();
             }
             else
             {
-                listToExport = _referralData.GetPatientReferralsList().Where(r => r.AdminContactCode.ToUpper() == staffCode & r.WeeksFromReferral >= weeksFromReferral).ToList();
+                listToExport = _referralData.GetActiveReferralsList().Where(r => r.AdminContactCode.ToUpper() == staffCode & r.WeeksFromReferral >= weeksFromReferral).ToList();
             }
 
             int days = weeksFromReferral * 7;
