@@ -14,7 +14,7 @@ namespace WMFACS_Review_List.Pages
         private readonly ClinicalContext _context;
         private readonly DataContext _dataContext;
         private readonly IConfiguration _configuration;
-        private readonly StaffData _staffData;
+        private readonly StaffUserData _staffData;
         private readonly StaticData _staticData;
         private readonly ReferralData _referralData;
         private readonly NotificationData _notificationData;
@@ -26,7 +26,7 @@ namespace WMFACS_Review_List.Pages
             _context = context;
             _dataContext = dataContext;
             _configuration = configuration;
-            _staffData = new StaffData(_context);
+            _staffData = new StaffUserData(_context);
             _staticData = new StaticData(_context, _dataContext);
             _referralData = new ReferralData(_context);
             _notificationData = new NotificationData(_context);

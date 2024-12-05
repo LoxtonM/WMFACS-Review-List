@@ -15,7 +15,7 @@ namespace WMFACS_Review_List.Pages
         private readonly DataContext _dataContext;
         private IConfiguration _configuration;
         private readonly ReviewItemData _reviewItemData;
-        private readonly StaffData _staffData;
+        private readonly StaffUserData _staffData;
         private readonly StaticData _staticData;
         private readonly ReferralData _referralData;
         private readonly SqlServices _sql;
@@ -26,7 +26,7 @@ namespace WMFACS_Review_List.Pages
             _dataContext = dataContext;
             _configuration = configuration;
             _reviewItemData = new ReviewItemData(_dataContext);
-            _staffData = new StaffData(_context);
+            _staffData = new StaffUserData(_context);
             _staticData = new StaticData(_context, _dataContext);
             _referralData = new ReferralData(_context);
             _sql = new SqlServices(_configuration);
